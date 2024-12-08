@@ -1,0 +1,6 @@
+@wink_HostAddress = http://localhost:5200
+
+GET {{wink_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
