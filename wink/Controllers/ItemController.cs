@@ -51,7 +51,7 @@ namespace wink.Controllers
             return item is null ? NotFound() : item;
         }
 
-        [HttpGet("category")]
+        [HttpGet("category/{category}")]
         public async Task<ActionResult<List<Item>>> getItemsByCategory(string category)
         {
             var list = await _itemService.GetByCategoryAsync(category.ToLower());

@@ -8,6 +8,7 @@
 
         public string UsersCollectionName { get; set; } = null!;
         public string ItemsCollectionName { get; set; } = null!;
+        public string CartsCollectionName { get; set; } = null!;
 
     }
 }

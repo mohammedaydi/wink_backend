@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using wink.Models;
 
@@ -25,6 +24,23 @@ namespace wink.Services
 
         public async Task<List<Item>> GetAsync() =>
        await _itemsCollection.Find(_ => true).ToListAsync();
+
+        public async Task<List<Item>> GetItemsByIdsAsync(List<string> ids)
+        {
+            var objectIdList = ids.Select(id => new ObjectId(id)).ToList();
+            var projection = Builders<Item>.Projection
+            .Exclude(c => c.Description)
+            .Exclude(c => c.Quantity)
+            .Exclude(c => c.Image);
+
+            // Create a filter using the $in operator
+            var filter = Builders<Item>.Filter.In("_id", objectIdList);
+
+            // Query the collection
+            var items = await _itemsCollection.Find(filter).ToListAsync();
+            
+            return items;
+        }
 
         public async Task<Item?> GetAsync(string id) =>
             await _itemsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
