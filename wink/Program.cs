@@ -13,6 +13,7 @@ builder.Services.Configure<WinkDatabaseSettings>(builder.Configuration.GetSectio
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<ItemService>();
 builder.Services.AddSingleton<AuthService>();
+builder.Services.AddSingleton<CartService>();   
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -34,6 +35,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]))
         };
     });
+
 
 //build the app
 var app = builder.Build();
