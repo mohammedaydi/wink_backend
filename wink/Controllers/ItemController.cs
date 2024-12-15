@@ -47,6 +47,7 @@ namespace wink.Controllers
             else if (oldItem.Quantity - quantity < 0) {
                 return BadRequest(new { message = "This quantity is not available" });
             }
+
             var item = await _itemService.DecrementAsync(id, oldItem.Quantity - quantity);
             return item is null ? NotFound() : item;
         }

@@ -16,5 +16,23 @@ namespace wink.Models
         public int Quantity { get; set; }
         public string Image { get; set; } = null!;
 
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            var other = obj as Item;
+            if (other == null) return false;
+
+            return Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            if( Id == null ) return 0;
+            int hash = 13;
+
+            hash = hash * 397 + Id.GetHashCode();
+            hash = hash * 397 + Name.GetHashCode();
+            return hash;
+        }
     }
 }

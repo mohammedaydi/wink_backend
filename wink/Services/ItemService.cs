@@ -59,13 +59,23 @@ namespace wink.Services
         //new tasks
         public async Task<Item?> DecrementAsync(string id, int quantity)
         {
-            var update = Builders<Item>.Update.Set("Quantity", quantity);
-            var updatedDocument = await _itemsCollection.FindOneAndUpdateAsync((x) => x.Id == id,update, new FindOneAndUpdateOptions<Item>
-            {
-                ReturnDocument = ReturnDocument.After // Return the document after update
-            });
+            if(quantity < 0) return null;
 
-            return updatedDocument;
+            var item = _itemsCollection.Find(x => x.Id == id);
+            if(item == null) return null;
+            var update = Builders<Item>.Update.Set("Quantity", quantity);
+            try
+            {
+                var updatedDocument = await _itemsCollection.FindOneAndUpdateAsync((x) => x.Id == id, update, new FindOneAndUpdateOptions<Item>
+                {
+                    ReturnDocument = ReturnDocument.After // Return the document after update
+                });
+                return updatedDocument;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
     }
