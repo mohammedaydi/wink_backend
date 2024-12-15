@@ -11,7 +11,7 @@ builder.Services.Configure<WinkDatabaseSettings>(builder.Configuration.GetSectio
 
 // Add services to the DI container.
 builder.Services.AddSingleton<UserService>();
-//builder.Services.AddSingleton<ItemService>();
+builder.Services.AddSingleton<ItemService>();
 builder.Services.AddSingleton<AuthService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
