@@ -10,11 +10,13 @@ namespace wink.Controllers
     {
         private readonly CartService _cartService;
         private readonly ItemService _itemService;
+        private readonly ItemCartService _itemCartService;
 
         //inject the service class
-        public CartController(CartService cartService, ItemService itemService) {
+        public CartController(CartService cartService, ItemService itemService, ItemCartService itemCartService) {
             _cartService = cartService;
             _itemService = itemService;
+            _itemCartService = itemCartService;
         }
 
         [HttpGet] 
@@ -85,6 +87,8 @@ namespace wink.Controllers
                 return NotFound(new { Message = "Cart not found after update." });
             }
 
+            updatedCart = await _itemCartService.updateTotalPrice(userId);
+
             return Ok(updatedCart);
         }
         
@@ -99,7 +103,16 @@ namespace wink.Controllers
                 return BadRequest("No cart exists for this user");
             }
 
-            await _cartService.updateCartItem(userId, cartItem);
+            try
+            {
+                await _cartService.updateCartItem(userId, cartItem);
+
+            }
+            catch (Exception ex) {
+                return NotFound(new { Message = "requested item not found" });
+            }
+
+
             var updatedCart = await _cartService.GetByUserIdAsync(userId);
 
             if (updatedCart == null)
@@ -107,6 +120,7 @@ namespace wink.Controllers
                 return NotFound(new { Message = "Cart not found after update." });
             }
 
+            updatedCart = await _itemCartService.updateTotalPrice(userId);
             return Ok(updatedCart);
         }
 
@@ -121,6 +135,7 @@ namespace wink.Controllers
             }
 
             var updatedCart = await _cartService.removeCartItem(userId, cartItem);
+            updatedCart = await _itemCartService.updateTotalPrice(userId);
 
             return Ok(updatedCart);
         }
@@ -136,6 +151,7 @@ namespace wink.Controllers
             }
 
             var updatedCart = await _cartService.emptyCart(userId);
+            updatedCart = await _itemCartService.updateTotalPrice(userId);
 
             return Ok(updatedCart);
         }
